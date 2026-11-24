@@ -30,4 +30,13 @@ class DeployEndpointTest extends TestCase
 
         $this->post('/_deploy/post-deploy', [], ['X-Deploy-Token' => $token])->assertOk()->assertJson(['ok' => true]);
     }
+
+    public function test_seed_flag_runs_seeders(): void
+    {
+        config(['agency.deploy_token' => $token = str_repeat('c', 40)]);
+        Artisan::shouldReceive('call')->times(6)->andReturn(0);
+        Artisan::shouldReceive('output')->andReturn('ok');
+
+        $this->post('/_deploy/post-deploy?seed=1', [], ['X-Deploy-Token' => $token])->assertOk()->assertJsonPath('output.db:seed', 'ok');
+    }
 }

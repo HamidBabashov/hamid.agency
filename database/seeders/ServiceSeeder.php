@@ -73,7 +73,8 @@ class ServiceSeeder extends Seeder
         ];
 
         foreach ($services as $service) {
-            Service::updateOrCreate(['key' => $service['key']], $service);
+            // Mövcud xidmətlərin üzərinə yazılmır (admin paneldəki dəyişikliklər qorunur)
+            Service::firstOrCreate(['key' => $service['key']], $service);
         }
     }
 }

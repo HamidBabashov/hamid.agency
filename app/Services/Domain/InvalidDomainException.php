@@ -4,6 +4,4 @@ namespace App\Services\Domain;
 
 use InvalidArgumentException;
 
-class InvalidDomainException extends InvalidArgumentException
-{
-}
+class InvalidDomainException extends InvalidArgumentException {}

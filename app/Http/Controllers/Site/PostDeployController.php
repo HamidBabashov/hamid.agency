@@ -12,6 +12,7 @@ use Throwable;
 /**
  * SSH-sız (FTP) deploy-dan sonra GitHub Actions bu ünvanı çağırır:
  *   POST /_deploy/post-deploy   Header: X-Deploy-Token: <DEPLOY_TOKEN>
+ *   ?seed=1 — ilk quraşdırmada admin hesabı və başlanğıc məlumatları yaradır (təkrar işlətmək təhlükəsizdir)
  * .env-də DEPLOY_TOKEN boşdursa, bu endpoint tamamilə bağlıdır (404).
  */
 class PostDeployController extends Controller
@@ -34,6 +35,11 @@ class PostDeployController extends Controller
                 ['route:cache', []],
                 ['view:cache', []],
             ] as [$command, $params]) {
+                if ($command === 'config:cache' && $request->boolean('seed')) {
+                    Artisan::call('db:seed', ['--force' => true]);
+                    $output['db:seed'] = trim(Artisan::output());
+                }
+
                 Artisan::call($command, $params);
                 $output[$command] = trim(Artisan::output());
             }

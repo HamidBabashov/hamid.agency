@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\LocaleUrls;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class SetLocale
         $locales = config('agency.locales');
         $locale = in_array($locale, $locales, true) ? $locale : config('agency.default_locale');
 
-        \App\Support\LocaleUrls::reset();
+        LocaleUrls::reset();
         App::setLocale($locale);
         Carbon::setLocale($locale);
 

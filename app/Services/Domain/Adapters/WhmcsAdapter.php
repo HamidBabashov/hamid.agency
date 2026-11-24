@@ -5,6 +5,7 @@ namespace App\Services\Domain\Adapters;
 use App\Contracts\DomainRegistrar;
 use App\Services\Domain\DomainCheckResult;
 use Illuminate\Http\Client\Pool;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
 
@@ -17,9 +18,7 @@ use RuntimeException;
  */
 class WhmcsAdapter implements DomainRegistrar
 {
-    public function __construct(protected array $config)
-    {
-    }
+    public function __construct(protected array $config) {}
 
     public function name(): string
     {
@@ -50,7 +49,7 @@ class WhmcsAdapter implements DomainRegistrar
         $results = [];
         foreach ($domains as $domain) {
             $response = $responses[$domain] ?? null;
-            $data = ($response instanceof \Illuminate\Http\Client\Response && $response->successful()) ? $response->json() : null;
+            $data = ($response instanceof Response && $response->successful()) ? $response->json() : null;
 
             $results[$domain] = match (($data['result'] ?? null) === 'success' ? ($data['status'] ?? null) : null) {
                 'available' => DomainCheckResult::available($domain, $this->name()),

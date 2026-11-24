@@ -14,8 +14,8 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        $email = env('ADMIN_EMAIL');
-        $password = env('ADMIN_PASSWORD');
+        $email = config('agency.admin.email');
+        $password = config('agency.admin.password');
 
         if (blank($email) || blank($password)) {
             throw new RuntimeException('ADMIN_EMAIL and ADMIN_PASSWORD must be set in .env');
@@ -28,7 +28,7 @@ class AdminSeeder extends Seeder
         User::updateOrCreate(
             ['email' => $email],
             [
-                'name' => env('ADMIN_NAME', 'Admin'),
+                'name' => config('agency.admin.name') ?: 'Admin',
                 'password' => Hash::make($password),
                 'is_admin' => true,
                 'email_verified_at' => now(),

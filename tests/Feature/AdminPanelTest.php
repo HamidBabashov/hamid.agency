@@ -70,11 +70,7 @@ class AdminPanelTest extends TestCase
 
     public function test_admin_seeder_reads_credentials_from_env(): void
     {
-        putenv('ADMIN_EMAIL=seed@example.com');
-        putenv('ADMIN_PASSWORD=very-secure-password');
-        $_ENV['ADMIN_EMAIL'] = 'seed@example.com';
-        $_ENV['ADMIN_PASSWORD'] = $_SERVER['ADMIN_PASSWORD'] = 'very-secure-password';
-        $_SERVER['ADMIN_EMAIL'] = 'seed@example.com';
+        config(['agency.admin.email' => 'seed@example.com', 'agency.admin.password' => 'very-secure-password']);
 
         $this->seed(AdminSeeder::class);
 

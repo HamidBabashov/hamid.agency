@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Contracts\DomainRegistrar;
+use App\Providers\AppServiceProvider;
 use App\Services\Domain\DomainAvailabilityService;
 use App\Services\Domain\DomainCheckResult;
 use App\Services\Domain\InvalidDomainException;
@@ -96,7 +97,7 @@ class DomainCheckTest extends TestCase
     {
         $this->app->forgetInstance(DomainRegistrar::class);
         $this->app->offsetUnset(DomainRegistrar::class);
-        (new \App\Providers\AppServiceProvider($this->app))->register();
+        (new AppServiceProvider($this->app))->register();
 
         foreach (['whois' => 'whois', 'resellerclub' => 'resellerclub', 'namecheap' => 'namecheap', 'whmcs' => 'whmcs'] as $provider => $name) {
             config(['domain.provider' => $provider]);
@@ -111,9 +112,7 @@ class FakeRegistrar implements DomainRegistrar
 
     public bool $fail = false;
 
-    public function __construct(private array $statuses = [])
-    {
-    }
+    public function __construct(private array $statuses = []) {}
 
     public function name(): string
     {

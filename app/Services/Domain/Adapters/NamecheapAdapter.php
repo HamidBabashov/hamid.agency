@@ -17,9 +17,7 @@ use RuntimeException;
  */
 class NamecheapAdapter implements DomainRegistrar
 {
-    public function __construct(protected array $config)
-    {
-    }
+    public function __construct(protected array $config) {}
 
     public function name(): string
     {

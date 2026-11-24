@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Http\Requests\QuoteRequest;
+use App\Models\Order;
+use App\Models\Service;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
@@ -69,7 +72,7 @@ class TranslationCompletenessTest extends TestCase
 
     public function test_dynamic_option_groups_are_translated(): void
     {
-        foreach (\App\Http\Requests\QuoteRequest::OPTIONS as $group => $values) {
+        foreach (QuoteRequest::OPTIONS as $group => $values) {
             foreach ($values as $value) {
                 foreach (config('agency.locales') as $locale) {
                     $this->assertTrue(trans()->has("quote.options.{$group}.{$value}", $locale, false), "{$locale}: quote.options.{$group}.{$value}");
@@ -77,13 +80,13 @@ class TranslationCompletenessTest extends TestCase
             }
         }
 
-        foreach ([...\App\Models\Service::KEYS, 'other'] as $key) {
+        foreach ([...Service::KEYS, 'other'] as $key) {
             foreach (config('agency.locales') as $locale) {
                 $this->assertTrue(trans()->has("site.service_types.{$key}", $locale, false));
             }
         }
 
-        foreach (\App\Models\Order::STATUSES as $status) {
+        foreach (Order::STATUSES as $status) {
             foreach (config('agency.locales') as $locale) {
                 $this->assertTrue(trans()->has("admin.statuses.{$status}", $locale, false));
             }

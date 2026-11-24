@@ -18,9 +18,7 @@ use Throwable;
  */
 class DomainAvailabilityService
 {
-    public function __construct(private DomainRegistrar $registrar)
-    {
-    }
+    public function __construct(private DomainRegistrar $registrar) {}
 
     /**
      * @return array<int, array{domain: string, extension: string, status: string, register_price: ?string, renew_price: ?string}>

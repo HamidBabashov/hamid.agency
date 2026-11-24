@@ -19,11 +19,10 @@ use Symfony\Component\HttpFoundation\Response;
 class ProtectAgainstSpam
 {
     public const HONEYPOT_FIELD = 'website';
+
     public const TIME_FIELD = '_hp_time';
 
-    public function __construct(private Recaptcha $recaptcha)
-    {
-    }
+    public function __construct(private Recaptcha $recaptcha) {}
 
     public function handle(Request $request, Closure $next): Response
     {

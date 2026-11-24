@@ -50,9 +50,7 @@ class WhoisAdapter implements DomainRegistrar
         'domain not found',
     ];
 
-    public function __construct(protected int $timeout = 5)
-    {
-    }
+    public function __construct(protected int $timeout = 5) {}
 
     public function name(): string
     {

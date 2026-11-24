@@ -48,6 +48,13 @@ return [
         'quality' => 80,
     ],
 
+    // Admin hesabı (AdminSeeder). config:cache-dən sonra env() işləmədiyi üçün buradan oxunur.
+    'admin' => [
+        'name' => env('ADMIN_NAME', 'Admin'),
+        'email' => env('ADMIN_EMAIL'),
+        'password' => env('ADMIN_PASSWORD'),
+    ],
+
     // Fayl göndərmə ilə deploy (SSH olmadıqda) üçün gizli açar
     'deploy_token' => env('DEPLOY_TOKEN'),
 ];
