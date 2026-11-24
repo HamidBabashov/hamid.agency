@@ -3,7 +3,10 @@
     "name": "hamidbabashov/hamid-agency",
     "type": "project",
     "description": "Hamid Agency — veb dizayn, mobil tətbiq, hosting və domen xidmətləri",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
@@ -24,7 +27,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
