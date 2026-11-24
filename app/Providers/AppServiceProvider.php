@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Contracts\DomainRegistrar;
+use App\Models\ContactMessage;
+use App\Models\Order;
 use App\Models\Service;
 use App\Services\Domain\Adapters\NamecheapAdapter;
 use App\Services\Domain\Adapters\ResellerClubAdapter;
@@ -43,6 +45,14 @@ class AppServiceProvider extends ServiceProvider
         // Header və footer menyusu üçün xidmətlər (sorğu başına bir dəfə)
         View::composer(['partials.header', 'partials.footer'], function ($view) {
             $view->with('navServices', once(fn () => Service::active()->get()));
+        });
+
+        // Admin menyusunda yeni sifariş/mesaj sayı
+        View::composer('layouts.admin', function ($view) {
+            $view->with('adminCounts', [
+                'orders' => Order::where('status', Order::STATUS_NEW)->count(),
+                'messages' => ContactMessage::where('status', ContactMessage::STATUS_NEW)->count(),
+            ]);
         });
 
         // Formalar: dəqiqədə 5, gündə 30 göndəriş (IP üzrə)

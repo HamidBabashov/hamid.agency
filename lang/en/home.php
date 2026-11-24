@@ -15,9 +15,9 @@ return [
         ],
         'card_title' => 'Your project',
         'card_items' => [
-            'Design' => 'Ready',
-            'Development' => 'In progress',
-            'Hosting' => 'Active',
+            ['label' => 'Design', 'status' => 'Ready'],
+            ['label' => 'Development', 'status' => 'In progress'],
+            ['label' => 'Hosting', 'status' => 'Active'],
         ],
     ],
 

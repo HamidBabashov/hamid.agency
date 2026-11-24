@@ -15,9 +15,9 @@ return [
         ],
         'card_title' => 'Layihəniz',
         'card_items' => [
-            'Dizayn' => 'Hazırdır',
-            'Hazırlanma' => 'Davam edir',
-            'Hosting' => 'Aktiv',
+            ['label' => 'Dizayn', 'status' => 'Hazırdır'],
+            ['label' => 'Hazırlanma', 'status' => 'Davam edir'],
+            ['label' => 'Hosting', 'status' => 'Aktiv'],
         ],
     ],
 

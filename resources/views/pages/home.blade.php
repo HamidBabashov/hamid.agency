@@ -52,10 +52,10 @@
                         <div class="rounded-xl border border-white/10 bg-white/5 p-4">
                             <p class="text-sm font-semibold text-white">{{ __('home.hero.card_title') }}</p>
                             <ul class="mt-3 space-y-2 text-sm">
-                                @foreach (__('home.hero.card_items') as $label => $status)
+                                @foreach (__('home.hero.card_items') as $item)
                                     <li class="flex items-center justify-between text-slate-300">
-                                        <span>{{ $label }}</span>
-                                        <span class="rounded-full bg-green-400/15 px-2 py-0.5 text-xs font-medium text-green-300">{{ $status }}</span>
+                                        <span>{{ $item['label'] }}</span>
+                                        <span class="rounded-full bg-green-400/15 px-2 py-0.5 text-xs font-medium text-green-300">{{ $item['status'] }}</span>
                                     </li>
                                 @endforeach
                             </ul>
