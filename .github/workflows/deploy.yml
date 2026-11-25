@@ -1,0 +1,228 @@
+# Avtomatik deploy: main branch-a push olunanda
+#  1) testlər
+#  2) composer install --no-dev, npm ci && npm run build
+#  3) SSH varsa rsync, yoxdursa FTP ilə fayllar serverə göndərilir
+#  4) migrate --force, config/route/view cache
+#
+# Lazım olan GitHub Secrets (Settings → Secrets and variables → Actions):
+#   Ümumi:  DEPLOY_PATH            Laravel qovluğu (SSH: tam yol, FTP: FTP kökündən yol)
+#           PUBLIC_PATH            (istəyə bağlı) public_html yolu — "ayrılmış" quraşdırma üçün
+#   SSH:    SSH_HOST, SSH_USER, SSH_KEY, (istəyə bağlı) SSH_PORT, SSH_KNOWN_HOSTS
+#   FTP:    FTP_SERVER, FTP_USERNAME, FTP_PASSWORD, DEPLOY_TOKEN
+# Variables (istəyə bağlı): APP_URL, PHP_BIN, FTP_PROTOCOL (ftps|ftp), FTP_PORT
+# SSH_HOST təyin olunubsa SSH, əks halda FTP istifadə olunur.
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: 'Seeder-ləri işə sal (ilk quraşdırma: admin hesabı və başlanğıc məlumatlar)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  PHP_VERSION: '8.2'
+  NODE_VERSION: '20'
+
+jobs:
+  test:
+    name: Testlər
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, intl, gd, pdo_sqlite, zip
+          coverage: none
+
+      - name: Composer keşi
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache/files
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - run: composer install --no-interaction --prefer-dist --no-progress
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci && npm run build
+
+      - name: Testləri işə sal
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          php artisan test
+
+  deploy:
+    name: Serverə göndər
+    needs: test
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      APP_URL: ${{ vars.APP_URL || 'https://hamid.agency' }}
+      PHP_BIN: ${{ vars.PHP_BIN || 'php' }}
+      RUN_SEED: ${{ inputs.seed && '1' || '0' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, intl, gd, zip
+          coverage: none
+
+      - name: Composer (production)
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-progress
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Frontend build (Vite)
+        run: npm ci && npm run build
+
+      - name: Deploy üsulunu müəyyən et
+        id: method
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          PUBLIC_PATH: ${{ secrets.PUBLIC_PATH }}
+        run: |
+          if [ -z "$DEPLOY_PATH" ]; then echo "::error::DEPLOY_PATH secret təyin edilməyib"; exit 1; fi
+          if [ -n "$SSH_HOST" ]; then echo "method=ssh" >> "$GITHUB_OUTPUT";
+          elif [ -n "$FTP_SERVER" ]; then echo "method=ftp" >> "$GITHUB_OUTPUT";
+          else echo "::error::SSH_HOST və ya FTP_SERVER secret təyin edilməlidir"; exit 1; fi
+          if [ -n "$PUBLIC_PATH" ]; then echo "split=true" >> "$GITHUB_OUTPUT"; else echo "split=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Lazımsız faylları çıxar
+        run: rm -rf node_modules tests .git .github .editorconfig .gitattributes phpunit.xml database/database.sqlite
+
+      # ─────────────────────────── SSH (rsync) ───────────────────────────
+      - name: SSH açarını quraşdır
+        if: steps.method.outputs.method == 'ssh'
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          if [ -n "$SSH_KNOWN_HOSTS" ]; then printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts;
+          else ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" > ~/.ssh/known_hosts 2>/dev/null; fi
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Faylları rsync ilə göndər
+        if: steps.method.outputs.method == 'ssh'
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          PUBLIC_PATH: ${{ secrets.PUBLIC_PATH }}
+        run: |
+          RSH="ssh -i ~/.ssh/deploy_key -p $SSH_PORT"
+          # Serverdəki .env, storage, yüklənmiş şəkillər və keş faylları silinmir/üzərinə yazılmır
+          rsync -az --delete -e "$RSH" \
+            --exclude='.env' --exclude='.env.*' \
+            --exclude='/storage/' --exclude='/public/uploads/' \
+            --exclude='/bootstrap/cache/*.php' \
+            --exclude='.user.ini' --exclude='.well-known/' \
+            ./ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+          if [ -n "$PUBLIC_PATH" ]; then
+            rsync -az --delete -e "$RSH" \
+              --exclude='/uploads/' --exclude='.user.ini' --exclude='.well-known/' --exclude='cgi-bin/' \
+              ./public/ "$SSH_USER@$SSH_HOST:$PUBLIC_PATH/"
+          fi
+
+      - name: Miqrasiya və keşlər (SSH)
+        if: steps.method.outputs.method == 'ssh'
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" bash -s <<SCRIPT
+          set -e
+          cd "$DEPLOY_PATH"
+          mkdir -p storage/app/public storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache public/uploads
+          if [ ! -f .env ]; then echo "XƏTA: $DEPLOY_PATH/.env faylı yoxdur. README-dəki addımlara baxın."; exit 1; fi
+          $PHP_BIN artisan down --retry=15 || true
+          $PHP_BIN artisan migrate --force
+          if [ "$RUN_SEED" = "1" ]; then $PHP_BIN artisan db:seed --force; fi
+          $PHP_BIN artisan optimize:clear
+          $PHP_BIN artisan config:cache
+          $PHP_BIN artisan route:cache
+          $PHP_BIN artisan view:cache
+          $PHP_BIN artisan up
+          SCRIPT
+
+      # ─────────────────────────── FTP (SSH olmadıqda) ───────────────────────────
+      - name: Faylları FTP ilə göndər (Laravel)
+        if: steps.method.outputs.method == 'ftp'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          port: ${{ vars.FTP_PORT || 21 }}
+          local-dir: ./
+          server-dir: ${{ secrets.DEPLOY_PATH }}/
+          # Action yalnız özünün yüklədiyi faylları silir — serverdəki .env, loglar, keşlər və şəkillər toxunulmaz qalır
+          exclude: |
+            **/.git
+            **/.git/**
+            .env
+            .env.*
+            public/uploads/**
+
+      - name: Faylları FTP ilə göndər (public_html)
+        if: steps.method.outputs.method == 'ftp' && steps.method.outputs.split == 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          port: ${{ vars.FTP_PORT || 21 }}
+          local-dir: ./public/
+          server-dir: ${{ secrets.PUBLIC_PATH }}/
+          state-name: .ftp-deploy-public-state.json
+          exclude: |
+            uploads/**
+
+      - name: Miqrasiya və keşlər (HTTP vasitəsilə)
+        if: steps.method.outputs.method == 'ftp'
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: |
+          if [ -z "$DEPLOY_TOKEN" ]; then echo "::warning::DEPLOY_TOKEN yoxdur — miqrasiya və keşləri əl ilə işə salın"; exit 0; fi
+          curl --fail-with-body -sS -X POST -H "X-Deploy-Token: $DEPLOY_TOKEN" -H "Accept: application/json" \
+            --retry 3 --retry-delay 5 "$APP_URL/_deploy/post-deploy?seed=$RUN_SEED"
+
+      - name: Saytın işlədiyini yoxla
+        run: |
+          sleep 3
+          code=$(curl -s -o /dev/null -w '%{http_code}' -L "$APP_URL/az")
+          echo "HTTP $code"
+          test "$code" = "200"
