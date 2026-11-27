@@ -4,7 +4,7 @@
 @endphp
 <footer class="relative overflow-hidden bg-ink text-slate-400">
     <div class="aurora-blob -left-40 -top-40 h-96 w-96 bg-brand-600/30" aria-hidden="true"></div>
-    <div class="aurora-blob -bottom-40 right-0 h-80 w-80 bg-accent-500/10 motion-safe:animate-aurora-slow" aria-hidden="true"></div>
+    <div class="aurora-blob -bottom-40 right-0 h-80 w-80 bg-accent-500/10" aria-hidden="true"></div>
 
     <div class="container relative grid gap-12 pb-12 pt-20 sm:grid-cols-2 lg:grid-cols-12">
         <div class="lg:col-span-4">

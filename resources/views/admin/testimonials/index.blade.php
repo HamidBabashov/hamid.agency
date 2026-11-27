@@ -10,7 +10,7 @@
             <tr>
                 <td class="px-4 py-3"><span class="font-medium text-slate-900 dark:text-white">{{ $item->author_name }}</span><span class="block text-xs text-slate-500">{{ $item->company }}</span></td>
                 <td class="max-w-md px-4 py-3 text-slate-600 dark:text-slate-400">{{ \Illuminate\Support\Str::limit($item->content_az, 90) }}</td>
-                <td class="whitespace-nowrap px-4 py-3 text-accent-500">{{ str_repeat('★', $item->rating) }}</td>
+                <td class="whitespace-nowrap px-4 py-3 text-amber-400">{{ str_repeat('★', $item->rating) }}</td>
                 <td class="px-4 py-3"><x-admin.active :value="$item->is_active" /></td>
                 <td class="px-4 py-3"><x-admin.row-actions :edit="route('admin.testimonials.edit', $item)" :destroy="route('admin.testimonials.destroy', $item)" /></td>
             </tr>

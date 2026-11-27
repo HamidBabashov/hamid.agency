@@ -30,7 +30,7 @@
         @apply btn bg-slate-900 text-white shadow-sm hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-lg focus-visible:ring-brand-500 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100;
     }
     .btn-accent {
-        @apply btn bg-gradient-to-r from-accent-300 via-accent-400 to-accent-500 text-brand-950 shadow-lg shadow-accent-500/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-accent-500/40 focus-visible:ring-accent-500;
+        @apply btn bg-gradient-to-r from-accent-300 to-accent-400 text-brand-950 shadow-lg shadow-accent-500/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-accent-500/40 focus-visible:ring-accent-500;
     }
     .btn-outline {
         @apply btn border border-slate-300 bg-white/60 text-slate-800 backdrop-blur hover:border-slate-400 hover:bg-white focus-visible:ring-brand-500 dark:border-white/15 dark:bg-white/5 dark:text-slate-100 dark:hover:bg-white/10;
@@ -64,7 +64,7 @@
 
     /* ── Bölmələr ── */
     .section {
-        @apply py-20 sm:py-24 lg:py-28;
+        @apply py-16 sm:py-24 lg:py-28;
     }
     .section-title {
         @apply text-3xl font-bold text-slate-900 sm:text-4xl lg:text-5xl dark:text-white;
@@ -76,13 +76,13 @@
         @apply inline-flex items-center gap-2 rounded-full border border-accent-500/30 bg-accent-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-accent-700 dark:text-accent-300;
     }
     .text-gradient {
-        @apply bg-gradient-to-r from-accent-200 via-accent-400 to-orange-400 bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-accent-200 via-accent-300 to-cyan-200 bg-clip-text text-transparent;
     }
     .text-gradient-brand {
         @apply bg-gradient-to-r from-brand-600 via-brand-500 to-sky-500 bg-clip-text text-transparent dark:from-brand-300 dark:via-sky-300 dark:to-cyan-200;
     }
     .icon-tile {
-        @apply grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-600/30;
+        @apply grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-accent-400 to-brand-600 text-white shadow-lg shadow-accent-500/30;
     }
     .icon-tile-soft {
         @apply grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-brand-50 text-brand-700 ring-1 ring-brand-100 dark:bg-brand-500/10 dark:text-brand-300 dark:ring-brand-500/20;
@@ -90,7 +90,7 @@
 
     /* Aurora fonu (hero və səhifə başlıqları) */
     .aurora-blob {
-        @apply pointer-events-none absolute rounded-full opacity-60 blur-3xl motion-safe:animate-aurora;
+        @apply pointer-events-none absolute rounded-full opacity-60 blur-3xl;
     }
     .grid-pattern {
         background-image: linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);

@@ -13,8 +13,8 @@
         : 'text-slate-600 hover:bg-slate-900/[.04] hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white');
 @endphp
 <header x-data="siteHeader" @keydown.escape.window="open = false" class="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4">
-    <div class="mx-auto max-w-7xl rounded-2xl border transition duration-300"
-         :class="scrolled || open ? 'border-slate-200/80 bg-white/85 shadow-lg shadow-slate-900/[.06] backdrop-blur-xl dark:border-white/10 dark:bg-ink/80' : 'border-slate-200/60 bg-white/70 backdrop-blur-xl dark:border-white/10 dark:bg-white/[.04]'">
+    <div class="mx-auto max-w-7xl rounded-2xl border border-slate-200/80 bg-white/95 backdrop-blur-xl transition duration-300 dark:border-white/10 dark:bg-slate-900/90"
+         :class="scrolled || open ? 'shadow-lg shadow-slate-900/10' : ''">
         <div class="flex h-14 items-center justify-between gap-3 pl-4 pr-2 sm:h-16 sm:pl-5">
             {{-- Loqo yeri: hazır olduqda <img src="..." alt="Hamid Agency"> ilə əvəz edin --}}
             <a href="{{ lroute('home') }}" class="flex shrink-0 items-center gap-2.5 text-[17px] font-extrabold tracking-tight text-slate-900 dark:text-white">
