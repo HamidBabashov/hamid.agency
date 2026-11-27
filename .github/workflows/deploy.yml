@@ -126,8 +126,15 @@ jobs:
         run: |
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
-          if [ -n "$SSH_KNOWN_HOSTS" ]; then printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts;
-          else ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" > ~/.ssh/known_hosts 2>/dev/null; fi
+          case "$SSH_HOST" in
+            *@*|*://*|*/*|*:*|*" "*) echo "::error::SSH_HOST yalnız server ünvanı olmalıdır (məs. server.example.com və ya IP) — istifadəçi adı, port, 'ssh://' olmadan"; exit 1;;
+          esac
+          if [ -n "$SSH_KNOWN_HOSTS" ]; then
+            printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          elif ! ssh-keyscan -T 15 -p "$SSH_PORT" -H "$SSH_HOST" > ~/.ssh/known_hosts || [ ! -s ~/.ssh/known_hosts ]; then
+            echo "::error::$SSH_PORT portu ilə serverə qoşulmaq olmadı. Yoxlayın: SSH_HOST düzgündürmü, SSH portu 22 deyilsə SSH_PORT secret-i əlavə edin, hostinq xarici IP-lərdən SSH-a icazə verirmi."
+            exit 1
+          fi
           chmod 600 ~/.ssh/known_hosts
 
       - name: Faylları rsync ilə göndər
