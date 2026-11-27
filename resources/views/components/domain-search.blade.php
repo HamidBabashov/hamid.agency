@@ -7,7 +7,7 @@
             <input id="domain-q-{{ $id }}" name="domain" type="text" x-model="query" required maxlength="100"
                    autocomplete="off" autocapitalize="none" spellcheck="false" inputmode="url"
                    placeholder="{{ __('domains.search.placeholder') }}"
-                   class="input h-14 rounded-2xl pl-12 text-base {{ $dark ? 'border-transparent' : '' }}">
+                   class="input h-14 rounded-2xl pl-12 text-base {{ $dark ? 'border-transparent bg-white focus:bg-white dark:bg-white dark:text-slate-900' : '' }}">
         </div>
         <button type="submit" class="btn-accent h-14 px-8 text-base" :disabled="loading">
             <svg x-cloak x-show="loading" class="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"/><path fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" class="opacity-75"/></svg>

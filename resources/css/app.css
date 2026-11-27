@@ -64,7 +64,7 @@
 
     /* ── Bölmələr ── */
     .section {
-        @apply py-20 sm:py-24 lg:py-28;
+        @apply py-16 sm:py-24 lg:py-28;
     }
     .section-title {
         @apply text-3xl font-bold text-slate-900 sm:text-4xl lg:text-5xl dark:text-white;
@@ -90,7 +90,7 @@
 
     /* Aurora fonu (hero və səhifə başlıqları) */
     .aurora-blob {
-        @apply pointer-events-none absolute rounded-full opacity-60 blur-3xl motion-safe:animate-aurora;
+        @apply pointer-events-none absolute rounded-full opacity-60 blur-3xl;
     }
     .grid-pattern {
         background-image: linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);

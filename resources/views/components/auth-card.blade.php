@@ -2,7 +2,7 @@
 @props(['title', 'lead' => null])
 <section class="relative overflow-hidden bg-slate-50 pb-20 pt-28 sm:pt-36 dark:bg-ink">
     <div class="aurora-blob -right-40 top-0 h-96 w-96 bg-brand-400/20" aria-hidden="true"></div>
-    <div class="aurora-blob -left-40 bottom-0 h-96 w-96 bg-accent-400/10 motion-safe:animate-aurora-slow" aria-hidden="true"></div>
+    <div class="aurora-blob -left-40 bottom-0 h-96 w-96 bg-accent-400/10" aria-hidden="true"></div>
     <div class="container relative">
         <div class="mx-auto grid max-w-5xl overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white shadow-2xl shadow-slate-900/10 lg:grid-cols-5 dark:border-white/10 dark:bg-slate-900/60" data-reveal>
             <div class="relative hidden overflow-hidden bg-ink p-10 text-white lg:col-span-2 lg:flex lg:flex-col">
