@@ -7,7 +7,7 @@
     {{-- HERO: başlıq + domen axtarışı (birinci ekranda əsas iki hərəkət) --}}
     <section class="relative isolate overflow-hidden bg-ink text-white">
         <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true"
-             style="background: radial-gradient(60% 50% at 15% 0%, rgba(52,102,246,.35), transparent 70%), radial-gradient(40% 40% at 90% 100%, rgba(245,158,11,.14), transparent 70%);"></div>
+             style="background: radial-gradient(60% 50% at 15% 0%, rgba(52,102,246,.35), transparent 70%), radial-gradient(40% 40% at 90% 100%, rgba(56,189,248,.2), transparent 70%);"></div>
 
         <div class="container grid items-center gap-12 pb-20 pt-32 sm:pt-40 lg:grid-cols-2 lg:gap-16 lg:pb-28">
             <div>
