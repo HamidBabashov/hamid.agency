@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Order extends Model
 {
@@ -26,6 +27,11 @@ class Order extends Model
     protected $guarded = ['id'];
 
     protected $casts = ['details' => 'array'];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Admin panel və email üçün oxunaqlı detallar.

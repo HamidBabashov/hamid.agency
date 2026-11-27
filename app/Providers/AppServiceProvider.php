@@ -10,8 +10,10 @@ use App\Services\Domain\Adapters\NamecheapAdapter;
 use App\Services\Domain\Adapters\ResellerClubAdapter;
 use App\Services\Domain\Adapters\WhmcsAdapter;
 use App\Services\Domain\Adapters\WhoisAdapter;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\View;
@@ -39,6 +41,21 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Şifrə bərpası emaili: istifadəçinin dilində, saytın lokallaşdırılmış ünvanı ilə
+        ResetPassword::createUrlUsing(fn ($user, string $token) => lroute('password.reset', [
+            'token' => $token,
+            'email' => $user->getEmailForPasswordReset(),
+        ], $user->preferredLocale()));
+
+        ResetPassword::toMailUsing(fn ($user, string $token) => (new MailMessage)
+            ->subject(__('account.reset_mail.subject'))
+            ->greeting(__('account.reset_mail.greeting', ['name' => $user->name]))
+            ->line(__('account.reset_mail.intro'))
+            ->action(__('account.reset_mail.action'), call_user_func(ResetPassword::$createUrlCallback, $user, $token))
+            ->line(__('account.reset_mail.expire', ['count' => config('auth.passwords.users.expire')]))
+            ->line(__('account.reset_mail.outro'))
+            ->salutation(__('account.mail.signature')));
+
         Paginator::defaultView('pagination::tailwind');
         Paginator::defaultSimpleView('pagination::simple-tailwind');
 
@@ -62,6 +79,11 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         RateLimiter::for('domain-check', fn (Request $request) => Limit::perMinute(20)->by('domain:'.$request->ip()));
+
+        RateLimiter::for('customer-login', fn (Request $request) => [
+            Limit::perMinute(5)->by('customer-login:'.mb_strtolower((string) $request->input('email')).'|'.$request->ip()),
+            Limit::perMinute(20)->by('customer-login-ip:'.$request->ip()),
+        ]);
 
         RateLimiter::for('admin-login', fn (Request $request) => Limit::perMinute(5)->by('login:'.$request->ip()));
     }

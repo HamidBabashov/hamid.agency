@@ -60,6 +60,37 @@ foreach (config('agency.locales') as $locale) {
 
             Route::get($seg('privacy'), [Site\PageController::class, 'privacy'])->name('privacy');
             Route::get($seg('terms'), [Site\PageController::class, 'terms'])->name('terms');
+
+            // Müştəri hesabları
+            Route::middleware('guest')->group(function () use ($seg) {
+                Route::get($seg('register'), [Site\Auth\RegisterController::class, 'create'])->name('register');
+                Route::post($seg('register'), [Site\Auth\RegisterController::class, 'store'])
+                    ->middleware(['throttle:forms', 'spam'])
+                    ->name('register.store');
+
+                Route::get($seg('login'), [Site\Auth\LoginController::class, 'create'])->name('login');
+                Route::post($seg('login'), [Site\Auth\LoginController::class, 'store'])
+                    ->middleware('throttle:customer-login')
+                    ->name('login.store');
+
+                Route::get($seg('forgot_password'), [Site\Auth\PasswordResetController::class, 'request'])->name('password.request');
+                Route::post($seg('forgot_password'), [Site\Auth\PasswordResetController::class, 'email'])
+                    ->middleware('throttle:forms')
+                    ->name('password.email');
+                Route::get($seg('reset_password').'/{token}', [Site\Auth\PasswordResetController::class, 'edit'])->name('password.reset');
+                Route::post($seg('reset_password'), [Site\Auth\PasswordResetController::class, 'update'])
+                    ->middleware('throttle:forms')
+                    ->name('password.update');
+            });
+
+            Route::middleware('auth')->group(function () use ($seg) {
+                Route::post($seg('logout'), [Site\Auth\LoginController::class, 'destroy'])->name('logout');
+                Route::get($seg('account'), [Site\AccountController::class, 'index'])->name('account');
+                Route::get($seg('account').'/'.$seg('orders').'/{order}', [Site\AccountController::class, 'show'])->name('account.orders.show');
+                Route::get($seg('account').'/'.$seg('profile'), [Site\AccountController::class, 'profile'])->name('account.profile');
+                Route::put($seg('account').'/'.$seg('profile'), [Site\AccountController::class, 'updateProfile'])->name('account.profile.update');
+                Route::put($seg('account').'/'.$seg('password'), [Site\AccountController::class, 'updatePassword'])->name('account.password.update');
+            });
         });
 }
 
@@ -87,6 +118,7 @@ Route::prefix('admin')->name('admin.')->middleware('locale:az')->group(function 
 
         Route::resource('orders', Admin\OrderController::class)->only(['index', 'show', 'update', 'destroy']);
         Route::resource('messages', Admin\MessageController::class)->only(['index', 'show', 'update', 'destroy']);
+        Route::resource('customers', Admin\CustomerController::class)->only(['index', 'show']);
     });
 });
 

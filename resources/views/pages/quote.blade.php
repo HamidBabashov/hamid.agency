@@ -21,6 +21,23 @@
             @endif
             <x-form-errors />
 
+            @guest
+                @php $back = '/'.request()->path().(request()->getQueryString() ? '?'.request()->getQueryString() : ''); @endphp
+                <div class="card mb-8 flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:p-6" data-reveal>
+                    <span class="icon-tile-soft"><x-icon name="user" class="h-5 w-5" /></span>
+                    <div class="flex-1">
+                        <p class="font-semibold text-slate-900 dark:text-white">{{ __('account.quote.guest_title') }}</p>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">{{ __('account.quote.guest_text') }}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="{{ lroute('login', ['redirect' => $back]) }}" class="btn-outline">{{ __('account.nav.login') }}</a>
+                        <a href="{{ lroute('register', ['redirect' => $back]) }}" class="btn-primary">{{ __('account.nav.register') }}</a>
+                    </div>
+                </div>
+            @else
+                <x-alert class="mb-8">{{ __('account.quote.logged_in', ['email' => auth()->user()->email]) }}</x-alert>
+            @endguest
+
             <form method="POST" action="{{ lroute('quote.store') }}" class="relative space-y-8" x-data="{ service: @js($service), sending: false }" @submit="sending = true">
                 @csrf
                 <x-spam-protection />
@@ -93,10 +110,10 @@
                     </h2>
                     <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ __('site.form.required_hint') }}</p>
                     <div class="mt-6 grid gap-5 sm:grid-cols-2">
-                        <x-field name="name" :label="__('site.form.name')" required maxlength="100" autocomplete="name" :placeholder="__('site.form.placeholders.name')" />
-                        <x-field name="company" :label="__('site.form.company')" maxlength="150" autocomplete="organization" :placeholder="__('site.form.placeholders.company')" />
-                        <x-field name="email" type="email" :label="__('site.form.email')" required maxlength="150" autocomplete="email" :placeholder="__('site.form.placeholders.email')" />
-                        <x-field name="phone" type="tel" :label="__('site.form.phone')" required maxlength="30" autocomplete="tel" :placeholder="__('site.form.placeholders.phone')" />
+                        <x-field name="name" :value="auth()->user()?->name" :label="__('site.form.name')" required maxlength="100" autocomplete="name" :placeholder="__('site.form.placeholders.name')" />
+                        <x-field name="company" :value="auth()->user()?->company" :label="__('site.form.company')" maxlength="150" autocomplete="organization" :placeholder="__('site.form.placeholders.company')" />
+                        <x-field name="email" :value="auth()->user()?->email" type="email" :label="__('site.form.email')" required maxlength="150" autocomplete="email" :placeholder="__('site.form.placeholders.email')" />
+                        <x-field name="phone" :value="auth()->user()?->phone" type="tel" :label="__('site.form.phone')" required maxlength="30" autocomplete="tel" :placeholder="__('site.form.placeholders.phone')" />
                     </div>
                 </fieldset>
 

@@ -1,6 +1,6 @@
 @props(['project'])
-<article {{ $attributes->class('card group overflow-hidden') }}>
-    <div class="aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-800">
+<article {{ $attributes->class('card card-hover group overflow-hidden') }}>
+    <div class="m-2 aspect-[16/10] overflow-hidden rounded-2xl bg-slate-100 dark:bg-white/5">
         @if ($project->image)
             <img src="{{ upload_url($project->image) }}" alt="{{ $project->t('title') }}" loading="lazy" decoding="async"
                  width="1200" height="750" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
@@ -8,7 +8,7 @@
             <div class="grid h-full place-items-center text-slate-300 dark:text-slate-600"><x-icon name="image" class="h-12 w-12" /></div>
         @endif
     </div>
-    <div class="p-5">
+    <div class="px-5 pb-6 pt-3">
         @if ($project->category)
             <p class="text-xs font-semibold uppercase tracking-wider text-accent-600 dark:text-accent-400">{{ $project->category->t('name') }}</p>
         @endif

@@ -14,6 +14,7 @@ return [
         'project_categories' => 'Portfolio kateqoriyaları',
         'testimonials' => 'Müştəri rəyləri',
         'orders' => 'Sifarişlər',
+        'customers' => 'Müştərilər',
         'messages' => 'Mesajlar',
         'view_site' => 'Sayta bax',
         'logout' => 'Çıxış',
@@ -69,6 +70,7 @@ return [
         'actions' => 'Əməliyyatlar',
         'projects_count' => 'Layihə sayı',
         'per_month' => 'aylıq',
+        'guest' => 'Qonaq (hesabsız)',
         'per_year' => 'illik',
     ],
     'fields' => [
@@ -116,6 +118,10 @@ return [
         'details' => 'Detallar',
         'locale' => 'Dil',
         'ip_address' => 'IP ünvanı',
+        'notify_customer' => 'Müştəriyə email ilə bildir',
+        'customer' => 'Müştəri hesabı',
+        'registered_at' => 'Qeydiyyat tarixi',
+        'orders_count' => 'Sifariş sayı',
         'number' => '№',
     ],
     'hints' => [

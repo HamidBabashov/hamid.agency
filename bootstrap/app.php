@@ -6,6 +6,7 @@ use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -23,8 +24,23 @@ return Application::configure(basePath: dirname(__DIR__))
         // Dil cookie-si JS tərəfindən də oxuna bilsin, şifrələnməsin
         $middleware->encryptCookies(except: ['locale']);
 
-        $middleware->redirectGuestsTo(fn () => route('admin.login'));
-        $middleware->redirectUsersTo(fn () => route('admin.dashboard'));
+        // Admin və müştəri hissələri üçün ayrı giriş/yönləndirmə ünvanları
+        $middleware->redirectGuestsTo(function (Request $request) {
+            if ($request->is('admin', 'admin/*')) {
+                return route('admin.login');
+            }
+
+            $locale = in_array($request->segment(1), config('agency.locales'), true) ? $request->segment(1) : config('agency.default_locale');
+
+            return lroute('login', [], $locale);
+        });
+        $middleware->redirectUsersTo(function (Request $request) {
+            if ($request->is('admin', 'admin/*')) {
+                return $request->user()?->is_admin ? route('admin.dashboard') : lroute('account', [], config('agency.default_locale'));
+            }
+
+            return lroute('account', [], app()->getLocale());
+        });
 
         $middleware->validateCsrfTokens(except: ['_deploy/post-deploy']);
     })

@@ -1,15 +1,18 @@
-@props(['eyebrow' => null, 'title', 'lead' => null])
-<section class="relative overflow-hidden bg-brand-950 text-white">
-    <div class="pointer-events-none absolute inset-0 opacity-40" aria-hidden="true"
-         style="background-image: radial-gradient(circle at 15% 20%, rgba(52,102,246,.45), transparent 40%), radial-gradient(circle at 85% 80%, rgba(245,158,11,.25), transparent 40%);"></div>
-    <div class="container relative py-16 sm:py-20">
-        @if ($eyebrow)
-            <p class="text-sm font-semibold uppercase tracking-wider text-accent-400">{{ $eyebrow }}</p>
-        @endif
-        <h1 class="mt-3 max-w-3xl text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">{{ $title }}</h1>
-        @if ($lead)
-            <p class="mt-5 max-w-2xl text-lg text-slate-300">{{ $lead }}</p>
-        @endif
+@props(['eyebrow' => null, 'title', 'lead' => null, 'compact' => false])
+<section class="relative overflow-hidden bg-ink text-white">
+    <x-aurora />
+    <div @class(['container relative', 'pb-16 pt-32 sm:pb-20 sm:pt-40' => ! $compact, 'pb-12 pt-28 sm:pt-32' => $compact])>
+        <div class="max-w-3xl" data-reveal>
+            @if ($eyebrow)
+                <p class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-accent-300 backdrop-blur">
+                    <span class="h-1.5 w-1.5 rounded-full bg-accent-400"></span>{{ $eyebrow }}
+                </p>
+            @endif
+            <h1 @class(['font-extrabold tracking-tight', 'mt-5 text-4xl sm:text-5xl lg:text-6xl' => ! $compact, 'mt-3 text-3xl sm:text-4xl' => $compact])>{{ $title }}</h1>
+            @if ($lead)
+                <p class="mt-5 max-w-2xl text-lg leading-relaxed text-slate-300">{{ $lead }}</p>
+            @endif
+        </div>
         {{ $slot }}
     </div>
 </section>
