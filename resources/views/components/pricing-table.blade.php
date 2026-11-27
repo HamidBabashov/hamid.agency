@@ -6,7 +6,7 @@
     <div x-data="pricing">
         {{-- Aylıq / illik keçid --}}
         <div class="flex justify-center">
-            <div class="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 p-1 dark:border-slate-700 dark:bg-slate-800" role="radiogroup" aria-label="{{ __('hosting.billing_toggle') }}">
+            <div class="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 p-1 dark:border-white/10 dark:bg-white/5" role="radiogroup" aria-label="{{ __('hosting.billing_toggle') }}">
                 <button type="button" role="radio" :aria-checked="!yearly" @click="yearly = false"
                         :class="!yearly ? 'bg-white text-brand-950 shadow dark:bg-slate-950 dark:text-white' : 'text-slate-600 dark:text-slate-400'"
                         class="rounded-full px-5 py-2 text-sm font-semibold transition">{{ __('hosting.monthly') }}</button>
@@ -25,22 +25,23 @@
         <div class="mt-10 grid gap-6 md:grid-cols-2 {{ $cols }}">
             @foreach ($plans as $plan)
                 <div @class([
-                    'card relative flex flex-col p-7',
-                    'border-2 border-brand-600 shadow-xl ring-4 ring-brand-600/10 dark:border-brand-500' => $plan->is_featured,
-                ])>
+                    'relative flex flex-col rounded-3xl p-8 transition duration-300 hover:-translate-y-1',
+                    'card' => ! $plan->is_featured,
+                    'bg-ink text-white shadow-glow ring-1 ring-brand-500/50 lg:-my-4 lg:py-12' => $plan->is_featured,
+                ]) data-reveal>
                     @if ($plan->is_featured)
-                        <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-accent-500 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-950">{{ __('hosting.popular') }}</span>
+                        <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-accent-300 to-accent-500 px-4 py-1 text-xs font-bold uppercase tracking-wide text-brand-950 shadow-lg shadow-accent-500/30">{{ __('hosting.popular') }}</span>
                     @endif
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">{{ $plan->t('name') }}</h3>
-                    <p class="mt-2 min-h-[2.5rem] text-sm text-slate-600 dark:text-slate-400">{{ $plan->t('description') }}</p>
+                    <h3 @class(['text-xl font-bold', 'text-slate-900 dark:text-white' => ! $plan->is_featured])>{{ $plan->t('name') }}</h3>
+                    <p @class(['mt-2 min-h-[2.5rem] text-sm', 'text-slate-600 dark:text-slate-400' => ! $plan->is_featured, 'text-slate-300' => $plan->is_featured])>{{ $plan->t('description') }}</p>
 
                     <div class="mt-6">
                         <p class="flex items-baseline gap-1">
-                            <span class="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white"
+                            <span @class(['text-5xl font-extrabold tracking-tight', 'text-slate-900 dark:text-white' => ! $plan->is_featured])
                                   x-text="yearly ? @js(money($plan->yearlyPerMonth())) : @js(money($plan->price_monthly))">{{ money($plan->price_monthly) }}</span>
-                            <span class="text-slate-500 dark:text-slate-400">{{ __('site.per_month') }}</span>
+                            <span class="opacity-60">{{ __('site.per_month') }}</span>
                         </p>
-                        <p class="mt-1 h-5 text-sm text-slate-500 dark:text-slate-400">
+                        <p class="mt-2 h-5 text-sm opacity-70">
                             <span x-show="!yearly">{{ __('hosting.billed_monthly') }}</span>
                             <span x-cloak x-show="yearly">
                                 {{ __('hosting.billed_yearly', ['amount' => money($plan->price_yearly)]) }}
@@ -51,7 +52,7 @@
                         </p>
                     </div>
 
-                    <ul class="mt-6 flex-1 space-y-3 text-sm">
+                    <ul @class(['mt-8 flex-1 space-y-3.5 border-t pt-8 text-sm', 'border-slate-200 dark:border-white/10' => ! $plan->is_featured, 'border-white/10 text-slate-200' => $plan->is_featured])>
                         @foreach ($plan->lines('features') as $feature)
                             <li class="flex gap-2.5"><x-icon name="check" class="h-5 w-5 shrink-0 text-green-600 dark:text-green-400" /><span>{{ $feature }}</span></li>
                         @endforeach
@@ -59,7 +60,7 @@
 
                     @php $orderUrl = lroute('quote', ['service' => 'hosting', 'plan' => $plan->id]); @endphp
                     <a :href="@js($orderUrl) + '&billing=' + (yearly ? 'yearly' : 'monthly')" href="{{ $orderUrl }}"
-                       class="{{ $plan->is_featured ? 'btn-accent' : 'btn-primary' }} mt-8 w-full py-3">{{ __('hosting.choose') }}</a>
+                       class="{{ $plan->is_featured ? 'btn-accent' : 'btn-outline' }} mt-10 w-full py-3.5">{{ __('hosting.choose') }}</a>
                 </div>
             @endforeach
         </div>

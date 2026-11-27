@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderStatusChanged;
 use App\Models\Order;
 use App\Models\Service;
+use App\Support\Notifier;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -30,15 +32,22 @@ class OrderController extends Controller
 
     public function show(Order $order): View
     {
-        return view('admin.orders.show', ['item' => $order]);
+        return view('admin.orders.show', ['item' => $order->load('user')]);
     }
 
     public function update(Request $request, Order $order): RedirectResponse
     {
+        $previous = $order->status;
+
         $order->update($request->validate([
             'status' => ['required', Rule::in(Order::STATUSES)],
             'admin_note' => ['nullable', 'string', 'max:5000'],
         ], [], __('admin.fields')));
+
+        // Status dəyişibsə və admin istəyirsə, müştəriyə öz dilində bildiriş
+        if ($previous !== $order->status && $request->boolean('notify_customer')) {
+            Notifier::customer($order->email, new OrderStatusChanged($order), $order->locale);
+        }
 
         return back()->with('success', __('admin.flash.updated'));
     }

@@ -1,6 +1,8 @@
 User-agent: *
 Disallow: /admin
 Disallow: /_deploy
+Disallow: /az/hesabim
+Disallow: /en/account
 Allow: /
 
 Sitemap: https://hamid.agency/sitemap.xml

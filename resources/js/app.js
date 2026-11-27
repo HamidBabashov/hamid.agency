@@ -49,5 +49,39 @@ Alpine.data('domainSearch', (endpoint, initial = '') => ({
     },
 }));
 
+// Scroll zamanı görünmə: [data-reveal] elementləri ekrana girəndə .is-visible alır
+function initReveal() {
+    window.__revealReady = true;
+    const items = document.querySelectorAll('[data-reveal]');
+    if (!('IntersectionObserver' in window)) {
+        items.forEach((el) => el.classList.add('is-visible'));
+        return;
+    }
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+    );
+    items.forEach((el) => observer.observe(el));
+}
+document.addEventListener('DOMContentLoaded', initReveal);
+
+// Header: səhifə aşağı sürüşdürüləndə kölgə
+Alpine.data('siteHeader', () => ({
+    open: false,
+    scrolled: false,
+    init() {
+        const update = () => (this.scrolled = window.scrollY > 12);
+        update();
+        window.addEventListener('scroll', update, { passive: true });
+    },
+}));
+
 window.Alpine = Alpine;
 Alpine.start();

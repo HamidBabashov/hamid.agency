@@ -20,7 +20,39 @@ export default {
             fontFamily: {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],
             },
+            keyframes: {
+                aurora: {
+                    '0%, 100%': { transform: 'translate3d(0,0,0) scale(1)' },
+                    '33%': { transform: 'translate3d(6%,-8%,0) scale(1.1)' },
+                    '66%': { transform: 'translate3d(-6%,6%,0) scale(.95)' },
+                },
+                float: {
+                    '0%, 100%': { transform: 'translateY(0)' },
+                    '50%': { transform: 'translateY(-10px)' },
+                },
+                marquee: {
+                    from: { transform: 'translateX(0)' },
+                    to: { transform: 'translateX(-50%)' },
+                },
+                shimmer: {
+                    from: { backgroundPosition: '200% 0' },
+                    to: { backgroundPosition: '-200% 0' },
+                },
+            },
+            animation: {
+                aurora: 'aurora 18s ease-in-out infinite',
+                'aurora-slow': 'aurora 26s ease-in-out infinite reverse',
+                float: 'float 6s ease-in-out infinite',
+                'float-delayed': 'float 7s ease-in-out 1.5s infinite',
+                marquee: 'marquee 40s linear infinite',
+                shimmer: 'shimmer 6s linear infinite',
+            },
+            boxShadow: {
+                soft: '0 1px 2px rgba(15,23,42,.04), 0 12px 32px -16px rgba(15,23,42,.18)',
+                glow: '0 0 0 1px rgba(255,255,255,.06), 0 20px 60px -20px rgba(52,102,246,.45)',
+            },
             colors: {
+                ink: '#050b1a',
                 // Əsas rəng — tünd göy
                 brand: {
                     50: '#eef4ff',

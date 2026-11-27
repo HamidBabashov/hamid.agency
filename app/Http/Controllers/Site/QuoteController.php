@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\QuoteRequest;
 use App\Mail\NewOrder;
+use App\Mail\OrderReceived;
 use App\Models\DomainExtension;
 use App\Models\HostingPlan;
 use App\Models\Order;
@@ -36,6 +37,7 @@ class QuoteController extends Controller
     public function store(QuoteRequest $request): RedirectResponse
     {
         $order = Order::create([
+            'user_id' => $request->user()?->id,
             'service_type' => $request->input('service_type'),
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -48,6 +50,13 @@ class QuoteController extends Controller
         ]);
 
         Notifier::send(new NewOrder($order));
+        Notifier::customer($order->email, new OrderReceived($order), $order->locale);
+
+        // Hesabı olan müştəri sifarişini dərhal görə bilər
+        if ($order->user_id) {
+            return redirect(lroute('account.orders.show', ['order' => $order->id]))
+                ->with('success', __('quote.form.success', ['number' => $order->id]));
+        }
 
         return redirect(lroute('quote'))->with('success', __('quote.form.success', ['number' => $order->id]));
     }

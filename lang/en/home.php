@@ -21,6 +21,17 @@ return [
         ],
     ],
 
+    'stack' => [
+        'title' => 'Technologies we work with',
+        'items' => ['Laravel', 'React', 'Vue.js', 'Flutter', 'Swift', 'Kotlin', 'Tailwind CSS', 'WordPress', 'Node.js', 'MySQL', 'Figma'],
+    ],
+
+    'chips' => [
+        'ssl' => 'SSL active',
+        'mobile' => 'Mobile-ready',
+        'domain' => 'yourcompany.com',
+    ],
+
     'services' => [
         'eyebrow' => 'What we do',
         'title' => 'Our services',

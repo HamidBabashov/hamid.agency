@@ -21,6 +21,17 @@ return [
         ],
     ],
 
+    'stack' => [
+        'title' => 'İstifadə etdiyimiz texnologiyalar',
+        'items' => ['Laravel', 'React', 'Vue.js', 'Flutter', 'Swift', 'Kotlin', 'Tailwind CSS', 'WordPress', 'Node.js', 'MySQL', 'Figma'],
+    ],
+
+    'chips' => [
+        'ssl' => 'SSL aktiv',
+        'mobile' => 'Mobil uyğun',
+        'domain' => 'sirketiniz.az',
+    ],
+
     'services' => [
         'eyebrow' => 'Nə edirik',
         'title' => 'Xidmətlərimiz',

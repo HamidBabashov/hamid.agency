@@ -17,6 +17,9 @@
 
     <title>{{ $fullTitle }}</title>
     <meta name="description" content="{{ $description }}">
+    @hasSection('robots')
+        <meta name="robots" content="@yield('robots')">
+    @endif
     <link rel="canonical" href="{{ $canonical }}">
 
     {{-- hreflang: hər dil üçün alternativ ünvan --}}
@@ -40,7 +43,7 @@
     @endforeach
     <meta name="twitter:card" content="summary_large_image">
 
-    <meta name="theme-color" content="#0b1f3a">
+    <meta name="theme-color" content="#050b1a">
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
@@ -48,6 +51,13 @@
     {{-- Qaranlıq rejim: CSS yüklənməzdən əvvəl tətbiq olunur ki, ekran "yanıb-sönməsin" --}}
     <script>
         (function () {
+            document.documentElement.classList.add('js');
+            // JS yüklənməsə, gizlədilmiş elementləri 2.5 saniyədən sonra göstər
+            setTimeout(function () {
+                if (!window.__revealReady) {
+                    document.querySelectorAll('[data-reveal]').forEach(function (el) { el.classList.add('is-visible'); });
+                }
+            }, 2500);
             try {
                 var t = localStorage.getItem('theme');
                 if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -65,7 +75,7 @@
     @include('partials.schema-organization')
     @stack('head')
 </head>
-<body class="flex min-h-screen flex-col bg-white font-sans text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-200">
+<body class="flex min-h-screen flex-col bg-white font-sans text-slate-800 antialiased dark:bg-ink dark:text-slate-300">
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-brand-950 focus:shadow">{{ __('site.skip_to_content') }}</a>
 
     @include('partials.header')

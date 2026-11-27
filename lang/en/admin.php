@@ -14,6 +14,7 @@ return [
         'project_categories' => 'Portfolio categories',
         'testimonials' => 'Testimonials',
         'orders' => 'Orders',
+        'customers' => 'Customers',
         'messages' => 'Messages',
         'view_site' => 'View site',
         'logout' => 'Log out',
@@ -69,6 +70,7 @@ return [
         'actions' => 'Actions',
         'projects_count' => 'Projects',
         'per_month' => 'monthly',
+        'guest' => 'Guest (no account)',
         'per_year' => 'yearly',
     ],
     'fields' => [
@@ -116,6 +118,10 @@ return [
         'details' => 'Details',
         'locale' => 'Language',
         'ip_address' => 'IP address',
+        'notify_customer' => 'Notify the customer by email',
+        'customer' => 'Customer account',
+        'registered_at' => 'Registered',
+        'orders_count' => 'Orders',
         'number' => '#',
     ],
     'hints' => [

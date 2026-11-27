@@ -11,4 +11,13 @@ return [
     'quote' => 'get-a-quote',
     'privacy' => 'privacy-policy',
     'terms' => 'terms-of-use',
+    'register' => 'register',
+    'login' => 'login',
+    'logout' => 'logout',
+    'forgot_password' => 'forgot-password',
+    'reset_password' => 'reset-password',
+    'account' => 'account',
+    'orders' => 'orders',
+    'profile' => 'profile',
+    'password' => 'password',
 ];

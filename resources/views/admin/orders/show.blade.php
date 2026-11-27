@@ -24,6 +24,13 @@
                     <div><dt class="text-xs uppercase tracking-wider text-slate-500">{{ __('admin.fields.company') }}</dt><dd class="mt-1">{{ $item->company ?: __('admin.labels.none') }}</dd></div>
                     <div><dt class="text-xs uppercase tracking-wider text-slate-500">{{ __('admin.fields.email') }}</dt><dd class="mt-1"><a href="mailto:{{ $item->email }}" class="text-brand-700 hover:underline dark:text-brand-300">{{ $item->email }}</a></dd></div>
                     <div><dt class="text-xs uppercase tracking-wider text-slate-500">{{ __('admin.fields.phone') }}</dt><dd class="mt-1"><a href="tel:{{ preg_replace('/[^\d+]/', '', (string) $item->phone) }}" class="text-brand-700 hover:underline dark:text-brand-300">{{ $item->phone }}</a></dd></div>
+                    <div><dt class="text-xs uppercase tracking-wider text-slate-500">{{ __('admin.fields.customer') }}</dt><dd class="mt-1">
+                        @if ($item->user)
+                            <a href="{{ route('admin.customers.show', $item->user) }}" class="font-medium text-brand-700 hover:underline dark:text-brand-300">{{ $item->user->name }}</a>
+                        @else
+                            <span class="text-slate-500">{{ __('admin.labels.guest') }}</span>
+                        @endif
+                    </dd></div>
                     <div><dt class="text-xs uppercase tracking-wider text-slate-500">{{ __('admin.fields.locale') }}</dt><dd class="mt-1">{{ strtoupper($item->locale) }}</dd></div>
                     <div><dt class="text-xs uppercase tracking-wider text-slate-500">{{ __('admin.fields.ip_address') }}</dt><dd class="mt-1 font-mono text-xs">{{ $item->ip_address }}</dd></div>
                 </dl>
@@ -43,6 +50,7 @@
                     <x-field name="status" type="select" :label="__('admin.fields.status')" :value="$item->status" required
                              :options="collect(\App\Models\Order::STATUSES)->mapWithKeys(fn ($s) => [$s => __('admin.statuses.'.$s)])->all()" />
                     <x-field name="admin_note" type="textarea" rows="4" :label="__('admin.fields.admin_note')" :value="$item->admin_note" maxlength="5000" />
+                    <x-admin.checkbox name="notify_customer" :label="__('admin.fields.notify_customer')" :checked="true" />
                     <button class="btn-primary w-full">{{ __('admin.actions.save') }}</button>
                 </form>
             </x-admin.panel>

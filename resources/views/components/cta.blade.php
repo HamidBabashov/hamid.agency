@@ -1,15 +1,15 @@
 @props(['title' => null, 'text' => null, 'service' => null])
 <section class="section">
     <div class="container">
-        <div class="relative overflow-hidden rounded-3xl bg-brand-950 px-6 py-14 text-center text-white sm:px-12">
-            <div class="pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"
-                 style="background-image: radial-gradient(circle at 20% 0%, rgba(52,102,246,.5), transparent 45%), radial-gradient(circle at 80% 100%, rgba(245,158,11,.3), transparent 45%);"></div>
+        <div class="relative isolate overflow-hidden rounded-[2.5rem] bg-ink px-6 py-16 text-center text-white shadow-glow sm:px-16 sm:py-20" data-reveal>
+            <x-aurora />
             <div class="relative mx-auto max-w-2xl">
-                <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">{{ $title ?? __('home.cta.title') }}</h2>
-                <p class="mt-4 text-lg text-slate-300">{{ $text ?? __('home.cta.text') }}</p>
-                <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-                    <a href="{{ lroute('quote', array_filter(['service' => $service])) }}" class="btn-accent px-6 py-3 text-base">{{ __('site.actions.get_quote') }}</a>
-                    <a href="{{ lroute('contact') }}" class="btn border border-white/30 px-6 py-3 text-base text-white hover:bg-white/10">{{ __('site.actions.contact_us') }}</a>
+                <span class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-accent-300 to-accent-500 text-brand-950 shadow-lg shadow-accent-500/30"><x-icon name="sparkles" class="h-7 w-7" /></span>
+                <h2 class="mt-6 text-3xl font-bold tracking-tight sm:text-5xl">{{ $title ?? __('home.cta.title') }}</h2>
+                <p class="mt-5 text-lg text-slate-300">{{ $text ?? __('home.cta.text') }}</p>
+                <div class="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+                    <a href="{{ lroute('quote', array_filter(['service' => $service])) }}" class="btn-accent px-7 py-3.5 text-base">{{ __('site.actions.get_quote') }} <x-icon name="arrow-right" class="h-5 w-5" /></a>
+                    <a href="{{ lroute('contact') }}" class="btn-glass px-7 py-3.5 text-base">{{ __('site.actions.contact_us') }}</a>
                 </div>
             </div>
         </div>

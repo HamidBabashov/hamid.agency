@@ -29,4 +29,20 @@ class Notifier
             Log::error('Notification email failed: '.$e->getMessage());
         }
     }
+
+    /** Müştəriyə öz dilində email (sifariş təsdiqi, status dəyişikliyi) */
+    public static function customer(?string $email, Mailable $mailable, ?string $locale = null): void
+    {
+        if (blank($email)) {
+            return;
+        }
+
+        $locale = in_array($locale, config('agency.locales'), true) ? $locale : config('agency.default_locale');
+
+        try {
+            Mail::to($email)->locale($locale)->send($mailable);
+        } catch (Throwable $e) {
+            Log::error('Customer email failed: '.$e->getMessage());
+        }
+    }
 }

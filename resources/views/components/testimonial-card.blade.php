@@ -1,6 +1,7 @@
 @props(['testimonial'])
-<figure class="card flex h-full flex-col p-6">
-    <div class="flex gap-0.5 text-accent-500" aria-label="{{ __('home.testimonials.rating', ['rating' => $testimonial->rating]) }}">
+<figure class="card card-hover flex h-full flex-col p-7" data-reveal>
+    <x-icon name="quote" class="h-8 w-8 text-brand-200 dark:text-brand-500/40" />
+    <div class="mt-4 flex gap-0.5 text-accent-500" aria-label="{{ __('home.testimonials.rating', ['rating' => $testimonial->rating]) }}">
         @for ($i = 1; $i <= 5; $i++)
             <x-icon name="star" class="h-4 w-4 {{ $i <= $testimonial->rating ? 'fill-current' : 'text-slate-300 dark:text-slate-600' }}" />
         @endfor

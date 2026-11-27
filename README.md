@@ -32,6 +32,7 @@ Veb dizayn, mobil tətbiq hazırlanması, hosting və domen satışı üçün ik
 | **Səhifələr** | Ana səhifə, Xidmətlər (4 ayrıca səhifə), Hosting paketləri (aylıq/illik keçid), Domenlər (axtarış + qiymət cədvəli), Portfolio (kateqoriya filtri), Haqqımızda, Əlaqə, Qiymət təklifi al, Məxfilik siyasəti, İstifadə şərtləri |
 | **Satış** | Sifarişlər bazaya yazılır, admininə email gedir, statusu admin paneldə idarə olunur (yeni / əlaqə saxlanıldı / tamamlandı). Ödəniş yoxdur. |
 | **Domen yoxlaması** | `DomainRegistrar` interfeysi. Hazır adapterlər: WHOIS (pulsuz), ResellerClub, Namecheap, WHMCS. |
+| **Müştəri hesabları** | Qeydiyyat, giriş, şifrə bərpası (email ilə), "Hesabım": sifarişlərin siyahısı və statusu, profil və şifrə. Daxil olmuş müştərinin sifarişi hesabına bağlanır, forma avtomatik doldurulur. Qonaq kimi sifariş vermək də mümkündür. Müştəriyə sifariş qəbulu və status dəyişikliyi barədə öz dilində email gedir. |
 | **Admin panel** | `/admin`. Xidmətlər, hosting paketləri, domen qiymətləri, portfolio, rəylər, sifarişlər, mesajlar. AZ/EN sahələri yan-yana. Şəkillər avtomatik WebP-ə çevrilir və kiçildilir. |
 | **SEO** | `sitemap.xml` (hər iki dil, hreflang ilə), `robots.txt`, canonical, Open Graph, Schema.org (Organization, Service, FAQPage), hər dil üçün ayrıca meta title/description |
 | **Təhlükəsizlik** | CSRF, formalarda rate limit (5/dəq, 30/gün), honeypot + vaxt yoxlaması, istəyə bağlı reCAPTCHA v3, admin girişində rate limit |
@@ -273,6 +274,7 @@ ssh-keygen -t ed25519 -C "github-deploy-hamid-agency" -f hamid_deploy -N ""
 - Hər məzmun növü üçün **AZ və EN sahələri yan-yanadır**; başlıq kimi əsas sahələr hər iki dildə məcburidir.
 - **Şəkillər:** JPG/PNG/WebP/GIF (maks. 8 MB) → avtomatik **WebP**, portfolio üçün maks. 1200 px, xidmətlər üçün 1600 px, rəy fotoları 300 px.
 - **Sifarişlər/mesajlar:** status filtri, axtarış, daxili qeyd, email/WhatsApp ilə cavab düymələri. Yeni müraciətlərin sayı menyuda göstərilir.
+- **Müştərilər:** qeydiyyatdan keçmiş müştərilərin siyahısı və hər birinin sifarişləri. Sifarişin statusunu dəyişdikdə "Müştəriyə email ilə bildir" seçilibsə, müştəri öz dilində email alır.
 - **Domen uzantıları:** "Seçilmiş" uzantılar istifadəçi uzantısız axtarış etdikdə avtomatik yoxlanılır.
 
 ---

@@ -6,6 +6,7 @@
         __('admin.nav.inbox') => [
             ['route' => 'admin.orders.index', 'match' => 'admin.orders.*', 'icon' => 'cart', 'label' => __('admin.nav.orders'), 'badge' => $adminCounts['orders'] ?? 0],
             ['route' => 'admin.messages.index', 'match' => 'admin.messages.*', 'icon' => 'inbox', 'label' => __('admin.nav.messages'), 'badge' => $adminCounts['messages'] ?? 0],
+            ['route' => 'admin.customers.index', 'match' => 'admin.customers.*', 'icon' => 'users', 'label' => __('admin.nav.customers')],
         ],
         __('admin.nav.sales') => [
             ['route' => 'admin.hosting-plans.index', 'match' => 'admin.hosting-plans.*', 'icon' => 'server', 'label' => __('admin.nav.hosting_plans')],
